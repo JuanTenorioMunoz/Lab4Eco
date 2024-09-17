@@ -4,6 +4,7 @@ const interval = setInterval(fetchData,10000)
 
 async function fetchData() {
   renderLoadingState();
+
   try {
     const response = await fetch("http://localhost:5050/users");
     if (!response.ok) {
@@ -11,6 +12,7 @@ async function fetchData() {
     }
     const data = await response.json();
     renderData(data);
+    
   } catch (error) {
     console.error(error);
     renderErrorState();
