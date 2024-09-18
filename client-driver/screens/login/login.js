@@ -1,5 +1,9 @@
+const socket = io("http://localhost:5050")
+
 const button = document.getElementById("login-button");
 const input = document.getElementById('input')
+
+
 
 const buttonClick = () => {
   console.log("clik")
@@ -7,3 +11,4 @@ const buttonClick = () => {
 }
 
 button.addEventListener("click", buttonClick);
+
