@@ -1,35 +1,43 @@
 const express = require("express");
 const cors = require("cors");
-const http = require('http');
-const socketIo = require('socket.io');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
-const app = express();
-app.use(express.json()); // Utility to process JSON in requests
-app.use(cors()); // Utility to allow clients to make requests from other hosts or IPs
+const app = express(); // Creates HTTP server
+app.use(express.json()); // utility to process JSON in requests
+app.use(cors()); // utility to allow clients to make requests from other hosts or ips
 
-// Create an HTTP server using the Express app
-const server = http.createServer(app);
+const httpServer = createServer(app); // Explicity creates an HTTP server from the Express app
+
+const io = new Server(httpServer, {
+  path: "/real-time",
+  cors: {
+    origin: "*", // Allow requests from any origin
+  },
+}); // Creates a WebSocket server, using the same HTTP server as the Express app and listening on the /real-time path
 
 const db = {
   drivers: [],
-  passager: [],
+  passangers: []
 };
 
-// Initialize socket.io on the same server
-const io = socketIo(server, {
-  cors: { origin: "*" }
-});
+io.on("connection", (socket) => {
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('message', (message) => {
-    console.log(message);
-    io.emit('message', `${socket.id.substr(0, 2)} said ${message}`);   
+  socket.on("addUserNameDriver", (user) => {
+    db.players.push(user);
+    console.log(user);
+    io.emit("userJoined", db); 
   });
+
+  // implement "startGame" listener
+
+  // implement "notifyMarco" listener
+
+  // implement "notifyPolo" listener
+
+  // implement "onSelectPolo" listener
 });
 
-// Start the server and listen on port 5050
-server.listen(5050, () => {
-  console.log('Server and socket.io listening on http://localhost:5050');
+httpServer.listen(5050, () => {
+  console.log(`Server is running on http://localhost:${5050}`);
 });
