@@ -1,10 +1,10 @@
 let socket = io("http://localhost:5050", { path: "/real-time" });
 
-const button = document.getElementById("login-button");
-const input = document.getElementById("input");
+const input = document.getElementById("input")
+const addVehicleButton = document.getElementById("addVehicle")
 
-const saveUserName = async () => {
-  const userName = input.value;
+const addVehicle = async () => {
+  const vehicleName = input.value;
   
   try {
     socket.emit("addUserNameDriver", userName);
@@ -20,8 +20,7 @@ const saveUserName = async () => {
 
 const buttonClick = async () => {
   console.log("click");
-  await saveUserName(); 
-  window.location.href = "/screens/vehicleSelect/index.html";
+  addVehicle();
 };
 
 button.addEventListener("click", buttonClick);
