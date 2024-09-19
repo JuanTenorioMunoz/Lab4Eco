@@ -1,48 +1,27 @@
-document.getElementById("fetch-button").addEventListener("click", fetchData);
+let socket = io("http://localhost:5050", { path: "/real-time" });
 
-const interval = setInterval(fetchData,10000)
+const button = document.getElementById("login-button");
+const input = document.getElementById("input");
 
-async function fetchData() {
-  renderLoadingState();
+const saveUserName = async () => {
+  const userName = input.value;
+  
   try {
-    const response = await fetch("http://localhost:5050/users");
+    socket.emit("addUserNameDriver", userName);
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const data = await response.json();
-    renderData(data);
+
   } catch (error) {
-    console.error(error);
-    renderErrorState();
+    console.log(error);
   }
-}
+};
 
-function renderErrorState() {
-  const container = document.getElementById("data-container");
-  container.innerHTML = ""; // Clear previous data
-  container.innerHTML = "<p>Failed to load data</p>";
-  console.log("Failed to load data");
-}
+const buttonClick = async () => {
+  console.log("click");
+  await saveUserName(); 
+  window.location.href = "/screens/vehicleSelect/index.html";
+};
 
-function renderLoadingState() {
-  const container = document.getElementById("data-container");
-  container.innerHTML = ""; // Clear previous data
-  container.innerHTML = "<p>Loading...</p>";
-  console.log("Loading...");
-}
-
-function renderData(data) {
-  const container = document.getElementById("data-container");
-  container.innerHTML = ""; // Clear previous data
-
-  if (data.players.length > 0) {
-    data.players.forEach((item) => {
-      const div = document.createElement("div");
-      const img = document.createElement("img");
-      div.className = "item";
-      div.innerHTML = item.name + item.option;
-      container.appendChild(div);
-      container.appendChild(img)
-    });
-  }
-}
+button.addEventListener("click", buttonClick);
