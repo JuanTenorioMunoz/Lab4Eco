@@ -48,16 +48,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("displayVehicle", (vehicleName) => {
-
-    const vehContainer = document.getElementById("vehicle-container");
-    if (!vehContainer) {
-      const vehContainer = document.createElement("div");
-      vehContainer.id = "vehicle-container";
-      document.body.appendChild(vehContainer);
-    }
-    document.getElementById("vehicle-container").innerHTML += `<p>${vehicleName}</p>`;
-  });
+  
 
   // implement "startGame" listener
 
