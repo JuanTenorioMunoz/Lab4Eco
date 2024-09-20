@@ -20,11 +20,10 @@ const db = {
   passengers: []
 };
 
-// Socket.io handling
 io.on("connection", (socket) => {
 
   socket.on("addUserNameDriver", (user) => {
-    db.drivers.push(user);
+    db.drivers.push({ userName: user });
     console.log(user);
     io.emit("driverJoined", db);
   });
@@ -36,9 +35,28 @@ io.on("connection", (socket) => {
   });
 
   socket.on("addVehicleToRoster", (user, vehicle) => {
-    db.drivers.user.push(vehicle);
-    console.log(vehicle);
-    io.emit("addvehicletoroster", db);
+    const driver = db.drivers.find((driver) => driver.userName === user);
+    
+    if (driver) {
+      if (!driver.vehicles) {
+        driver.vehicles = [];
+      }
+      driver.vehicles.push(vehicle);
+      io.emit("displayVehicle", vehicle);
+    } else {
+      console.log("Driver not found");
+    }
+  });
+
+  socket.on("displayVehicle", (vehicleName) => {
+
+    const vehContainer = document.getElementById("vehicle-container");
+    if (!vehContainer) {
+      const vehContainer = document.createElement("div");
+      vehContainer.id = "vehicle-container";
+      document.body.appendChild(vehContainer);
+    }
+    document.getElementById("vehicle-container").innerHTML += `<p>${vehicleName}</p>`;
   });
 
   // implement "startGame" listener

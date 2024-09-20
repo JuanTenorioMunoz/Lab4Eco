@@ -3,16 +3,14 @@ let socket = io("http://localhost:5050", { path: "/real-time" });
 const button = document.getElementById("login-button");
 const input = document.getElementById("input");
 
+console.log("FUNNNNY")
+
 const saveUserName = async () => {
   const userName = input.value;
   
   try {
     socket.emit("addUserNameDriver", userName);
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
+    localStorage.setItem('username', userName);
   } catch (error) {
     console.log(error);
   }
